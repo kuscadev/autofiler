@@ -58,6 +58,15 @@ git clone https://github.com/kuscadev/autofiler.git
 cd autofiler
 ```
 
+   - (For Linux) Run the installer:
+
+        ```Bash
+        chmod +x install.sh
+        ./install.sh
+        ```
+
+        Now you can run it from anywhere by typing `autofiler`.
+
 ### 2\. Run the Script
 
 No external libraries required\! It runs on standard Python 3 libraries (`os`, `shutil`).

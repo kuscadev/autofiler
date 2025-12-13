@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # AutoFiler - Automatic File Organizer
 # Copyright (C) 2025 kuscadev
 #
