@@ -10,15 +10,16 @@
 
 import os
 import shutil
+import re
 
 DIR_TYPES = {
     "Images": (".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".tiff"),
     "Documents": (".pdf", ".docx", ".doc", ".txt", ".xlsx", ".csv", ".pptx"),
     "Archives": (".zip", ".rar", ".7z", ".tar", ".gz", ".iso"),
-    "Setup_Files": (".exe", ".msi", ".deb", ".sh", ".AppImage", ".apk"),
+    "Setup_Files": (".exe", ".msi", ".deb", ".sh", ".AppImage", ".apk", ".dmg"),
     "Videos": (".mp4", ".mkv", ".avi", ".mov", ".flv", ".webm"),
     "Music": (".mp3", ".wav", ".flac", ".aac", ".ogg"),
-    "Code_Files": (".py", ".java", ".cpp", ".html", ".css", ".js")
+    "Code_Files": (".py", ".java", ".cpp", ".html", ".css", ".js", ".ipynb")
 }
 
 home_dir = os.path.expanduser("~")
@@ -29,6 +30,10 @@ if not os.path.exists(BASE_DIR):
     exit()
 print(f"Target Directory: {BASE_DIR}")
 print("-" * 40)
+
+
+pattern = re.compile(r"^(.*)\((\d+)\)$")  # to detect if filename ends with a (number)
+
 
 for filename in os.listdir(BASE_DIR):
     file_path = os.path.join(BASE_DIR, filename)
@@ -46,6 +51,22 @@ for filename in os.listdir(BASE_DIR):
                 print(f"New folder created: {target_folder}")
             target_path = os.path.join(target_folder, filename)
             try:
+
+                # handling duplicates by appending (1), (2), etc. to the filename
+                counter = 1
+                base, ext = os.path.splitext(filename)
+
+                match = pattern.match(base)
+                if match:
+                    base = match.group(1).strip()
+                    counter = int(match.group(2)) + 1
+
+                target_path = os.path.join(target_folder, filename)
+
+                while os.path.exists(target_path):
+                    target_path = os.path.join(target_folder, f"{base} ({counter}){ext}")
+                    counter += 1
+
                 shutil.move(file_path, target_path)
                 print(f"Moved: {filename} -> {folder_name}")
                 moved = True
